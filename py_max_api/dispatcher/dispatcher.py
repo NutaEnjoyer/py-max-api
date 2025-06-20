@@ -9,6 +9,7 @@ from .handler import Handler
 from filters import Filter
 from bot_types import Update, UpdateType
 from typing import Callable
+import asyncio
 import logging
 
 logging.basicConfig(level=logging.INFO)
@@ -37,7 +38,7 @@ class Dispatcher:
         """
         self.handlers.append(handler)
 
-    def handle(self, update: Update):
+    async def handle(self, update: Update):
         """
         Dispatch an incoming update to the appropriate handler.
         :param update: The update to handle.
@@ -51,12 +52,12 @@ class Dispatcher:
 
                 if handler.commands:
                     if update.message.text in handler.commands:
-                        return handler.func(update)
+                        return await handler.func(update)
                     else:
                         continue
 
                 else:
-                    return handler.func(update)
+                    return await handler.func(update)
 
     def message_handler(
         self, commands: list[str] | None = None, filters: list[Filter] | None = None
@@ -212,15 +213,23 @@ class Dispatcher:
 
         return decorator
 
+    async def polling_loop(self):
+        while True:
+            try:
+                updates = await self.bot.get_updates(
+                    timeout=config.DEFAULT_POLLING_TIMEOUT, marker=1
+                )
+                for update in updates.updates:
+                    await self.handle(update)
+            except Exception as e:
+                logger.error(f"Error in polling loop: {e}")
+                await asyncio.sleep(config.DEFAULT_POLLING_TIMEOUT)
+
     def start_polling(self):
         """
         Start polling for updates from the MAX API and dispatch them to handlers.
         This method runs an infinite loop and should be called in the main entry point.
         """
-        logger.info("Starting polling")
-        while True:
-            updates = self.bot.get_updates(
-                timeout=config.DEFAULT_POLLING_TIMEOUT, marker=1
-            )
-            for update in updates.updates:
-                self.handle(update)
+
+        asyncio.run(self.polling_loop())
+        

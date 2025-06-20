@@ -20,8 +20,8 @@ bot = Bot('YOUR_TOKEN')
 dp = Dispatcher(bot)
 
 @dp.message_handler(commands=["start"])
-def start(update: Update):
-    bot.send_message(update.message.sender.user_id, text="Hello, world!")
+async def start(update: Update):
+    await bot.send_message(update.message.sender.user_id, text="Hello, world!")
 
 if __name__ == "__main__":
     dp.start_polling()

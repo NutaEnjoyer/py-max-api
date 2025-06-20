@@ -63,13 +63,13 @@ class Bot:
         self.params = {"access_token": self.__token}
         self.verify = False
 
-    def __call__(self, method) -> Any:
+    async def __call__(self, method) -> Any:
         """
         Execute an API method using the session with the default timeout.
         :param method: The API method instance to execute.
         :return: The parsed API response.
         """
-        response = self.session(method, timeout=self.request_timeout)
+        response = await self.session(method, timeout=self.request_timeout)
         return response
 
     @property
@@ -80,7 +80,7 @@ class Bot:
         """
         return self.__token
 
-    def get_updates(
+    async def get_updates(
         self,
         limit: int | None = None,
         timeout: int | None = None,
@@ -97,17 +97,17 @@ class Bot:
             marker=marker,
             types=types,
         )
-        return self(call)
+        return await self(call)
 
-    def get_me(self) -> Me:
+    async def get_me(self) -> Me:
         """
         Get information about the current bot.
         :return: Me model with bot info.
         """
         call = GetMeMethod()
-        return self(call)
+        return await self(call)
 
-    def update_me(self, *args, **kwargs) -> Me:
+    async def update_me(self, *args, **kwargs) -> Me:
         """
         Update the bot's profile information.
         :param args: Positional arguments for UpdateMeMethod.
@@ -115,9 +115,9 @@ class Bot:
         :return: Updated Me model.
         """
         call = UpdateMeMethod(*args, **kwargs)
-        return self(call)
+        return await self(call)
 
-    def get_chat(self, *args, **kwargs) -> Chat:
+    async def get_chat(self, *args, **kwargs) -> Chat:
         """
         Get information about a specific chat.
         :param args: Positional arguments for GetChatMethod.
@@ -125,17 +125,17 @@ class Bot:
         :return: Chat model.
         """
         call = GetChatMethod(*args, **kwargs)
-        return self(call)
+        return await self(call)
 
-    def get_chats(self) -> list[Chat]:
+    async def get_chats(self) -> list[Chat]:
         """
         Get a list of all chats the bot is a member of.
         :return: List of Chat models.
         """
         call = GetChatsMethod()
-        return self(call)
+        return await self(call)
 
-    def send_message(
+    async def send_message(
         self,
         user_id: int | None = None,
         chat_id: int | None = None,
@@ -168,18 +168,18 @@ class Bot:
             format=format,
             disable_link_preview=disable_link_preview,
         )
-        return self(call)
+        return await self(call)
 
-    def get_message(self, message_id: str) -> Message:
+    async def get_message(self, message_id: str) -> Message:
         """
         Get a message by its ID.
         :param message_id: Message ID.
         :return: Message model.
         """
         call = GetMessageMethod(message_id=message_id)
-        return self(call)
+        return await self(call)
 
-    def get_messages(
+    async def get_messages(
         self,
         chat_id: int | None = None,
         message_ids: list[str] | None = None,
@@ -203,9 +203,9 @@ class Bot:
             to=to,
             count=count,
         )
-        return self(call)
+        return await self(call)
 
-    def edit_message(self, *args, **kwargs) -> SuccessOrMessage:
+    async def edit_message(self, *args, **kwargs) -> SuccessOrMessage:
         """
         Edit a message.
         :param args: Positional arguments for EditMessageMethod.
@@ -213,18 +213,18 @@ class Bot:
         :return: SuccessOrMessage model.
         """
         call = EditMessageMethod(*args, **kwargs)
-        return self(call)
+        return await self(call)
 
-    def delete_message(self, message_id: str) -> SuccessOrMessage:
+    async def delete_message(self, message_id: str) -> SuccessOrMessage:
         """
         Delete a message.
         :param message_id: Message ID.
         :return: SuccessOrMessage model.
         """
         call = DeleteMessageMethod(message_id=message_id)
-        return self(call)
+        return await self(call)
 
-    def upload_photo(
+    async def upload_photo(
         self,
         path: str,
     ) -> Upload:
@@ -234,9 +234,9 @@ class Bot:
         :return: Upload model with file URL.
         """
         call = UploadMethod(path=path, type_=UploadType.IMAGE)
-        return self(call)
+        return await self(call)
 
-    def upload_video(
+    async def upload_video(
         self,
         path: str,
     ) -> Upload:
@@ -246,18 +246,18 @@ class Bot:
         :return: Upload model with file URL.
         """
         call = UploadMethod(path=path, type_=UploadType.VIDEO)
-        return self(call)
+        return await self(call)
 
-    def get_video(self, video_token: str) -> Video:
+    async def get_video(self, video_token: str) -> Video:
         """
         Get a video by its token.
         :param video_token: Video token.
         :return: Video model.
         """
         call = GetVideoMethod(video_token=video_token)
-        return self(call)
+        return await self(call)
 
-    def answer(
+    async def answer(
         self,
         callback_id: str,
         message: NewMessageBody | None = None,
@@ -269,10 +269,9 @@ class Bot:
         :param message: The message to answer.
         :param notification: The notification to send.
         """
-
         call = AnswerMethod(
             callback_id=callback_id,
             message=message,
             notification=notification,
         )
-        return self(call)
+        return await self(call)
