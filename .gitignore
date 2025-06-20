@@ -1,5 +1,11 @@
 .env 
 venv
+build
 __pycache__
 *.pyc
 idea
+py_max_api.egg-info
+
+test.py
+video.mp4
+photo.png
