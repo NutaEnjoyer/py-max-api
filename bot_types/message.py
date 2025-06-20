@@ -4,6 +4,7 @@ from bot_types.recipient import Recipient
 from bot_types.linked_message import LinkedMessage
 from bot_types.message_body import MessageBody
 from bot_types.message_stat import MessageStat
+from pydantic import computed_field
 
 
 class Message(Model):
@@ -14,3 +15,7 @@ class Message(Model):
     body: MessageBody
     stat: MessageStat | None = None
     url: str | None = None
+
+    @computed_field
+    def message_id(self) -> str:
+        return self.body.mid

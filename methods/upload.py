@@ -8,6 +8,9 @@ class UploadMethod(TelegramMethod):
     __returning__ = Upload
     __api_method__ = "uploads"
     __api_method_type__ = "POST"
+    __headers__ = {
+        "Content-Type": "multipart/form-data",
+    }
 
     def __init__(self, path: str, type_: UploadType):
         super().__init__()

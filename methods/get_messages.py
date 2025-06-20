@@ -13,7 +13,7 @@ class GetMessagesMethod(TelegramMethod):
     def __init__(
         self,
         chat_id: int | None = None,
-        message_ids: list[int] | None = None,
+        message_ids: list[str] | None = None,
         from_: int | None = None,
         to: int | None = None,
         count: int | None = None,
@@ -22,7 +22,7 @@ class GetMessagesMethod(TelegramMethod):
         self.params = {
             "chat_id": chat_id,
             "message_ids": (
-                ",".join([str(m) for m in message_ids]) if message_ids else None
+                ",".join([m for m in message_ids]) if message_ids else None
             ),
             "from": from_,
             "to": to,

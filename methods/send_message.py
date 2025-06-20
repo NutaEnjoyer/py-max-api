@@ -20,7 +20,7 @@ class SendMessageMethod(TelegramMethod):
         text: str | None = None,
         attachments: list[AttachmentRequest] | None = None,
         link: NewMessageLink | None = None,
-        norify: bool = True,
+        notify: bool | None = True,
         format: TextFormat | None = None,
         disable_link_preview: bool | None = None,
     ):
@@ -37,6 +37,6 @@ class SendMessageMethod(TelegramMethod):
                 [at.model_dump() for at in attachments] if attachments else None
             ),
             "link": link.model_dump() if link else None,
-            "notify": norify,
+            "notify": notify,
             "format": format.value if format else None,
         }
